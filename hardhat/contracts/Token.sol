@@ -41,6 +41,7 @@ contract Token is ERC20, ERC20Burnable, Pausable, AccessControl, IToken {
         _burn(account, amount);
     }
 
+    // Gas optimization candidate
     function batchTransfer(
         address[] calldata recipients,
         uint256[] calldata amounts
