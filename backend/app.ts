@@ -4,10 +4,18 @@ import { BlockchainService } from './services/blockchainService';
 import { setupSwagger } from './swagger/swagger';
 import { loggerMiddleware } from './middlewares/logger';
 import tokenRoutes from './routes/tokenRoutes';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  })
+);
 
 // Instantiate services for DI
 const authService = new AuthService();
@@ -30,7 +38,7 @@ app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`API server running on http://localhost:${PORT}`);
   console.log(`Swagger docs available on http://localhost:${PORT}/docs`);

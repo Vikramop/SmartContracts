@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { mintLimiter } from '../middlewares/rateLimiter';
@@ -6,6 +6,7 @@ import { validateRequest } from '../middlewares/validate';
 import { TokenController } from '../controllers/tokenController';
 
 const router = Router();
+const tokenController = new TokenController();
 
 /**
  * @swagger
@@ -56,7 +57,44 @@ router.post(
   body('to').isString().notEmpty(),
   body('amount').isInt({ min: 1 }),
   validateRequest,
-  (req, res) => TokenController.mint(req, res)
+  (req: Request, res: Response) => tokenController.mint(req, res)
 );
+
+// Dummy endpoints for balance/transactions/userinfo for FE testing:
+
+router.get('/balance', (req: Request, res: Response) => {
+  res.json({
+    balance: 1500,
+    symbol: 'AIR',
+  });
+});
+
+router.get('/transactions', (req: Request, res: Response) => {
+  res.json([
+    {
+      id: '1',
+      from: '0x0000000000000000000000000000000000000000',
+      to: '0xabcDEF123456...',
+      amount: 1000,
+      timestamp: new Date().toISOString(),
+      type: 'mint',
+    },
+    {
+      id: '2',
+      from: '0xabcDEF123456...',
+      to: '0xReceiver456...',
+      amount: 200,
+      timestamp: new Date().toISOString(),
+      type: 'transfer',
+    },
+  ]);
+});
+
+router.get('/userinfo', (req: Request, res: Response) => {
+  res.json({
+    address: '0xabcDEF123456...',
+    roles: ['admin', 'minter'], // Remove "admin" to test user UI
+  });
+});
 
 export default router;
