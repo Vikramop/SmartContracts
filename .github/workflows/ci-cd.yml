@@ -36,23 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # AWS ECR login
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      # Build and push backend container
-      - name: Build and push backend Docker image
-        run: |
-          docker build -t ${{ secrets.AWS_ECR_REPO_BACKEND }} ./backend
-          $(aws ecr get-login --no-include-email)
-          docker tag ${{ secrets.AWS_ECR_REPO_BACKEND }}:latest ${{ secrets.AWS_ECR_REPO_BACKEND }}:latest
-          docker push ${{ secrets.AWS_ECR_REPO_BACKEND }}:latest
-      # Build and push frontend container
-      - name: Build and push frontend Docker image
-        run: |
-          docker build -t ${{ secrets.AWS_ECR_REPO_FRONTEND }} ./frontend
-          docker tag ${{ secrets.AWS_ECR_REPO_FRONTEND }}:latest ${{ secrets.AWS_ECR_REPO_FRONTEND }}:latest
-          docker push ${{ secrets.AWS_ECR_REPO_FRONTEND }}:latest
+      - name: Build backend Docker image
+        run: docker build -t backend:latest ./backend
+      - name: Build frontend Docker image
+        run: docker build -t frontend:latest ./frontend
