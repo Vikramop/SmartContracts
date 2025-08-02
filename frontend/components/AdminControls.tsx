@@ -25,7 +25,7 @@ const AdminControls: React.FC<Props> = ({ onMint }) => {
   };
 
   return (
-    <div className="p-4 border rounded bg-gray-50">
+    <div className="p-4 border ">
       <h3 className="mb-2 font-semibold">Admin Controls</h3>
       <input
         className="border p-1 mr-2 rounded mb-2"
