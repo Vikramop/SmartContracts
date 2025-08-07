@@ -1,20 +1,15 @@
 # Stage 1: Build
 FROM node:18-alpine AS build
-
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install
-
 COPY . .
-
 RUN npm run build
 
-# Stage 2: Serve with a lightweight server (e.g. nginx)
-FROM nginx:alpine
-
-COPY --from=build /app/out /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Stage 2: Run as Node server
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app ./
+EXPOSE 3000
+CMD ["npm", "start"]

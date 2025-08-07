@@ -9,8 +9,6 @@ services:
       - '5000:5000'
     environment:
       - NODE_ENV=production
-    volumes:
-      - ./backend:/usr/src/app
     command: node app.js
 
   frontend:
@@ -18,7 +16,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - '3000:80'
+      - '3000:3000' # <-- map 3000:3000
     environment:
       - NODE_ENV=production
     depends_on:
